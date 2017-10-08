@@ -29,8 +29,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include <cstdlib>
-#include <ctime>
+#include <random>
 
 using namespace std;
 
@@ -104,31 +103,20 @@ int setHighestNumber()
 int generateRandomNumber(int high)
 {
     int intResult;
-    int intTempTime;
     
-    float fltClock;
+    // Use random_device to set up seed value
+    random_device rd;
     
-    intTempTime = time(0);
+    // Use seed value to drive engine
+    mt19937 engine(rd());
     
-    //Test when intTempTime is the same as time(0)
-    //It is sometimes false and falls through
-    //With no returned value
-    while(intTempTime == time(0))
-    {
-        while(intTempTime != time(0))
-        {
-            fltClock = time(0);
-            
-            unsigned seed = time(0);
-            
-            srand(seed);
-            
-            intResult = rand() % high;
-            
-            return intResult + 1;
-        }
-    }
-    return 0;
+    // Define range randoms will be generated over/for
+    uniform_int_distribution<> dist(0,high);
+    
+    // Use distribution and engine to generate random number
+    intResult = dist(engine);
+    
+    return intResult;
 }
 
 void drawArray(const int intArray[][INT_COLS])
@@ -143,7 +131,6 @@ void drawArray(const int intArray[][INT_COLS])
         cout << endl;
     }
 }
-
 
 void getTotal(const int intArray[][INT_COLS])
 {
